@@ -1,5 +1,6 @@
 package top.xxpblog.easyChat.api.controller.user;
 
+import io.swagger.annotations.ApiOperation;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.service.user.UserProfileService;
 import top.xxpblog.easyChat.api.service.user.UserService;
@@ -32,10 +33,7 @@ public class UserIndexController {
     @Resource
     private UserProfileService userProfileService;
     
-    /**
-     * 登录用户信息
-     * @return
-     */
+    @ApiOperation("查询登陆的用户信息")
     @GetMapping("/loginInfo")
     public BaseResVO loginInfo(HttpServletRequest request) {
         
@@ -67,10 +65,7 @@ public class UserIndexController {
         
     }
     
-    /**
-     * 用户信息
-     * @return
-     */
+    @ApiOperation("查看他人的用户信息")
     @GetMapping("/read")
     public BaseResVO read(@RequestParam(value = "uid") Long uid,
                           HttpServletRequest request) {
@@ -92,12 +87,7 @@ public class UserIndexController {
     
     
     
-    /**
-     * 获取二维码
-     *
-     * @param request
-     * @return
-     */
+    @ApiOperation("获取用户的二维码--可用户添加好友")
     @GetMapping("/getQRCheckCode")
     public BaseResVO getQRCheckCode(HttpServletRequest request) {
         // 验证登录

@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * 群相关
  */
-
+@Api("群相关接口")
 @RequestMapping("/group")
 @RestController
 public class GroupIndexController {
@@ -45,13 +45,14 @@ public class GroupIndexController {
     @Resource
     private UserService userService;
 
-
+    @ApiOperation("查询群用户列表")
     @GetMapping("/lists")
     public BaseResVO lists(@RequestParam("groupId") Long groupId,
                            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                            @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
                            HttpServletRequest request) {
         // 验证登录
+        // TODO 需要把所有的登录验证放到握手的时候
         UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
         if (userLoginDTO == null) {
             return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
@@ -80,11 +81,7 @@ public class GroupIndexController {
         return ResultVOUtils.success(groupIndexListResVOS);
     }
 
-    /**
-     * 添加
-     *
-     * @return
-     */
+    @ApiOperation("创建群聊")
     @PostMapping("/create")
     public BaseResVO create(@Valid @RequestBody GroupSaveReqVO groupSaveReqVO,
                             BindingResult bindingResult,
@@ -130,11 +127,7 @@ public class GroupIndexController {
         return ResultVOUtils.success(group);
     }
 
-    /**
-     * 更新
-     *
-     * @return
-     */
+    @ApiOperation("更新群信息")
     @PostMapping("/update")
     public BaseResVO update(@Valid @RequestBody GroupSaveReqVO groupSaveReqVO,
                             BindingResult bindingResult,
@@ -188,11 +181,7 @@ public class GroupIndexController {
         return ResultVOUtils.success();
     }
 
-    /**
-     * 删除 （解散群）
-     *
-     * @return
-     */
+    @ApiOperation("删除群\\解散群")
     @PostMapping("/delete")
     public BaseResVO delete(@RequestParam(value = "groupId") Long groupId,
                             HttpServletRequest request) {

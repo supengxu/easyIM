@@ -1,5 +1,6 @@
 package top.xxpblog.easyChat.api.controller.group;
 
+import io.swagger.annotations.ApiOperation;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.constant.WSMsgTypeConstant;
 import top.xxpblog.easyChat.api.constant.WSResTypeConstant;
@@ -44,11 +45,7 @@ public class GroupUserController {
     @Resource
     private GroupMsgService groupMsgService;
     
-    /**
-     * 列表
-     *
-     * @return
-     */
+    @ApiOperation("获取该用户的群列表")
     @GetMapping("/lists")
     public BaseResVO lists(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                            @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
@@ -85,11 +82,7 @@ public class GroupUserController {
         return ResultVOUtils.success(groupUserListResVOS);
     }
     
-    /**
-     * 添加
-     *
-     * @return
-     */
+    @ApiOperation("添加群")
     @PostMapping("/create")
     public BaseResVO create(@RequestParam(value = "checkCode", required = false, defaultValue = "") String checkCode,
                             @RequestParam(value = "groupId", required = false, defaultValue = "0L") Long groupId,
@@ -159,11 +152,7 @@ public class GroupUserController {
         return ResultVOUtils.success(groupUserListResVO);
     }
     
-    /**
-     * 更新
-     *
-     * @return
-     */
+    @ApiOperation("更新群")
     @PostMapping("/update")
     public BaseResVO update(@Valid @RequestBody GroupUserSaveReqVO groupUserSaveReqVO,
                             BindingResult bindingResult,
@@ -194,11 +183,7 @@ public class GroupUserController {
         return ResultVOUtils.success();
     }
     
-    /**
-     * 删除 （退出群）
-     *
-     * @return
-     */
+    @ApiOperation("删除 （退出群）")
     @PostMapping("/delete")
     public BaseResVO delete(@RequestParam(value = "groupId") Long groupId,
                             HttpServletRequest request) {
@@ -237,13 +222,7 @@ public class GroupUserController {
         return ResultVOUtils.success();
     }
     
-    /**
-     * 获取二维码
-     *
-     * @param groupId
-     * @param request
-     * @return
-     */
+    @ApiOperation("获取二维码")
     @GetMapping("/getCheckCode")
     public BaseResVO getCheckCode(@RequestParam(value = "groupId") Long groupId,
                                   HttpServletRequest request) {
@@ -267,10 +246,7 @@ public class GroupUserController {
     }
     
     
-    /**
-     * 清空未读消息数量
-     * @return
-     */
+    @ApiOperation("清空未读消息数量")
     @PostMapping("/clearUnMsgCount")
     public BaseResVO clearUnMsgCount(@RequestParam(value = "groupId") Long groupId,
                                      HttpServletRequest request) {

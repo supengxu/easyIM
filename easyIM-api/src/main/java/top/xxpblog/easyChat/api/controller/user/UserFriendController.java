@@ -1,5 +1,6 @@
 package top.xxpblog.easyChat.api.controller.user;
 
+import io.swagger.annotations.ApiOperation;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.service.user.UserFriendService;
 import top.xxpblog.easyChat.api.service.user.UserService;
@@ -29,23 +30,19 @@ import java.util.stream.Collectors;
 @RequestMapping("/user/friend")
 @RestController
 public class UserFriendController {
-    
+
     @Resource
     private UserFriendService userFriendService;
-    
+
     @Resource
     private UserService userService;
-    
-    /**
-     * 获取朋友列表
-     *
-     * @return
-     */
+
+    @ApiOperation("获取好友列表")
     @GetMapping("/lists")
     public BaseResVO lists(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                            @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
                            HttpServletRequest request) {
-        
+
         // 验证登录
         UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
         if (userLoginDTO == null) {
@@ -58,11 +55,11 @@ public class UserFriendController {
 
 
         List<UserFriend> userFriends = userFriendService.listByUid(uid, page, limit);
-    
+
         List<Long> uids = userFriends.stream().map(UserFriend::getFriendUid).collect(Collectors.toList());
-    
+
         Map<Long, UserInfoListResVO> userInfoListResVOMap = userService.listByUidIn(uids);
-        
+
         List<UserFriendListInfoResVO> userFriendListInfoResVOS = new ArrayList<>();
         userFriends.forEach(v -> {
             UserFriendListInfoResVO userFriendListInfoResVO = new UserFriendListInfoResVO();
@@ -70,17 +67,13 @@ public class UserFriendController {
             userFriendListInfoResVO.setUser(userInfoListResVOMap.get(v.getFriendUid()));
             userFriendListInfoResVOS.add(userFriendListInfoResVO);
         });
-    
+
         return ResultVOUtils.success(userFriendListInfoResVOS);
-        
+
     }
-    
-    
-    /**
-     * 删除好友
-     *
-     * @return
-     */
+
+
+    @ApiOperation("删除好友关系")
     @PostMapping("/delete")
     public BaseResVO delete(@Valid @RequestBody UserFriendDeleteReqVO userFriendDeleteReqVO,
                             BindingResult bindingResult,
@@ -88,13 +81,13 @@ public class UserFriendController {
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
-        
+
         // 验证登录
         UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
         if (userLoginDTO == null) {
             return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
         }
-        
+
         Long uid = userLoginDTO.getUid();
         Long friendUid = userFriendDeleteReqVO.getFriendUid();
 
@@ -103,7 +96,7 @@ public class UserFriendController {
         if (!b) {
             return ResultVOUtils.error(ResultEnum.NOT_NETWORK);
         }
-        
+
         return ResultVOUtils.success();
     }
 }

@@ -1,5 +1,6 @@
 package top.xxpblog.easyChat.api.controller.user;
 
+import io.swagger.annotations.ApiOperation;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.constant.WSMsgTypeConstant;
 import top.xxpblog.easyChat.api.constant.WSResTypeConstant;
@@ -52,7 +53,8 @@ public class UserFriendAskController {
   
   @Resource
   private UserFriendMsgService userFriendMsgService;
-  
+
+  @ApiOperation("获取好友申请列表")
   @GetMapping("/lists")
   public BaseResVO lists(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                          @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
@@ -92,7 +94,7 @@ public class UserFriendAskController {
     
   }
   
-  
+  @ApiOperation("创建好友申请")
   @PostMapping("/create")
   public BaseResVO create(@RequestParam(value = "checkCode", required = false, defaultValue = "") String checkCode,
                           @RequestParam(value = "friendUid", required = false, defaultValue = "0L") Long friendUid,
@@ -167,14 +169,7 @@ public class UserFriendAskController {
     
   }
   
-  /**
-   * 好友请求
-   *
-   * @param userFriendAskAckReqVO
-   * @param bindingResult
-   * @param request
-   * @return
-   */
+  @ApiOperation("确认好友请求")
   @PostMapping("/ack")
   public BaseResVO ack(@Valid @RequestBody UserFriendAskAckReqVO userFriendAskAckReqVO,
                        BindingResult bindingResult,
@@ -273,7 +268,7 @@ public class UserFriendAskController {
     userProfile2.setCreateTime(new Date());
     userProfile2.setModifiedTime(new Date());
     userProfileArrayList.add(userProfile2);
-    boolean b2 = userProfileService.incFriendCountAll(userProfileArrayList);
+     userProfileService.incFriendCountAll(userProfileArrayList);
   
     Long senderUid = uid;
     

@@ -1,5 +1,6 @@
 package top.xxpblog.easyChat.api.controller.user;
 
+import io.swagger.annotations.ApiOperation;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.constant.WSMsgTypeConstant;
 import top.xxpblog.easyChat.api.constant.WSResTypeConstant;
@@ -48,11 +49,7 @@ public class UserFriendMsgController {
     @Resource
     private WSServer wsServer;
     
-    /**
-     * 获取朋友列表
-     *
-     * @return
-     */
+    @ApiOperation("获取好友消息列表")
     @GetMapping("/lists")
     public BaseResVO lists(@RequestParam(value = "senderUid") Long senderUid,
                            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
@@ -86,11 +83,7 @@ public class UserFriendMsgController {
         
     }
     
-    /**
-     * 发送消息
-     *
-     * @return
-     */
+    @ApiOperation("好友间发送消息")
     @PostMapping("/create")
     public BaseResVO create(@Valid @RequestBody UserFriendMsgSaveReqVO userFriendMsgSaveReqVO,
                             BindingResult bindingResult,
@@ -191,11 +184,7 @@ public class UserFriendMsgController {
     }
     
     
-    /**
-     * 清空未读的消息数量
-     *
-     * @return
-     */
+    @ApiOperation("清空未读的消息数量")
     @PostMapping("/clearUnMsgCount")
     public BaseResVO clearUnMsgCount(@Valid @RequestBody UserFriendMsgClearMsgCountReqVO msgCountReqVO,
                                      BindingResult bindingResult,

@@ -1,6 +1,7 @@
 package top.xxpblog.easyChat.api.controller.user;
 
 
+import io.swagger.annotations.ApiOperation;
 import top.xxpblog.easyChat.api.service.other.QqWebAuthService;
 import top.xxpblog.easyChat.api.service.user.UserQqService;
 import top.xxpblog.easyChat.api.utils.UserLoginUtils;
@@ -38,13 +39,7 @@ public class UserLoginController {
     @Resource
     private UserQqService userQqService;
     
-    /**
-     * 用户密码登录
-     *
-     * @param userLoginPwdReqVO
-     * @param bindingResult
-     * @return
-     */
+   @ApiOperation("账号密码登陆")
     @PostMapping("/byPwd")
     public BaseResVO byPwd(@Valid @RequestBody UserLoginPwdReqVO userLoginPwdReqVO,
                            BindingResult bindingResult) {
@@ -66,11 +61,7 @@ public class UserLoginController {
         return ResultVOUtils.success(userLoginResVO);
     }
     
-    /**
-     * 用户密码登录
-     *
-     * @return
-     */
+    @ApiOperation("游客登陆")
     @PostMapping("/byTourist")
     @CrossOrigin
     public BaseResVO byTourist(@RequestParam(value = "sex") Integer type) {
@@ -103,11 +94,7 @@ public class UserLoginController {
         return ResultVOUtils.success(userLoginResVO);
     }
     
-    /**
-     * 第三方QQ登录
-     *
-     * @return
-     */
+    @ApiOperation("QQ登陆")
     @PostMapping("/byQq")
     public BaseResVO byQq(@RequestParam(value = "code") String code,
                           @RequestParam(value = "redirect_uri") String redirect_uri) {

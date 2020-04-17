@@ -1,5 +1,7 @@
 package top.xxpblog.easyChat.api.controller.group;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.constant.WSResTypeConstant;
 import top.xxpblog.easyChat.api.service.group.GroupMsgService;
@@ -27,9 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * 群消息相关
- */
+@Api("群消息发布相关API")
 @RequestMapping("/group/msg")
 @RestController
 public class GroupMsgController {
@@ -46,11 +46,7 @@ public class GroupMsgController {
     @Resource
     private WSServer wsServer;
 
-    /**
-     * 列表
-     *
-     * @return
-     */
+    @ApiOperation("查询列表")
     @GetMapping("/lists")
     public BaseResVO lists(@RequestParam("groupId") Long groupId,
                            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
@@ -92,11 +88,7 @@ public class GroupMsgController {
         return ResultVOUtils.success(groupMsgListResVOS);
     }
 
-    /**
-     * 添加
-     *
-     * @return
-     */
+    @ApiOperation("发布群消息")
     @PostMapping("/create")
     public BaseResVO create(@Valid @RequestBody GroupMsgCreateReqVO groupMsgCreateReqVO,
                             BindingResult bindingResult,
