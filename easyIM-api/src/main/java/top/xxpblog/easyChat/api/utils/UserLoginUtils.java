@@ -59,48 +59,63 @@ public class UserLoginUtils {
     return true;
   }
 
+    public static UserLoginDTO getUserLoginDTO(HttpServletRequest request) {
+        String sUid = request.getParameter("UID");
+
+        Cookie[] cookies = request.getCookies();
+
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("UID")) {
+                sUid = cookie.getValue();
+            }
+        }
+
+        Long uid = Long.valueOf(sUid);
+
+        UserLoginDTO userLoginDTO = new UserLoginDTO();
+
+        userLoginDTO.setUid(uid);
+        return userLoginDTO;
+    }
   /**
    * 验证用户是否登录
    * @param request
    * @return
    */
-  public static UserLoginDTO check(HttpServletRequest request) {
-    
-    String sUid = request.getParameter("UID");
-    String token = request.getParameter("SID");
-    if (sUid == null || sUid.isEmpty() || token == null || token.isEmpty()) {
-      Cookie[] cookies = request.getCookies();
-      if (cookies == null) {
-        return null;
-      }
-      for (Cookie cookie : cookies) {
-        if (cookie.getName().equals("UID")) {
-          sUid = cookie.getValue();
-        } else if (cookie.getName().equals("SID")) {
-          token = cookie.getValue();
-        }
-      }
-    }
-    
-    if (sUid == null || token == null) {
-      return null;
-    }
+  public static Boolean check(HttpServletRequest request) {
 
-    Long uid;
-    try {
-      uid = Long.valueOf(sUid);
-    }catch (Exception e){
-      return null;
-    }
+      String sUid = request.getParameter("UID");
+      String token = request.getParameter("SID");
+      if (sUid == null || sUid.isEmpty() || token == null || token.isEmpty()) {
+          Cookie[] cookies = request.getCookies();
+          if (cookies == null) {
+              return false;
+          }
+          for (Cookie cookie : cookies) {
+              if (cookie.getName().equals("UID")) {
+                  sUid = cookie.getValue();
+              } else if (cookie.getName().equals("SID")) {
+                  token = cookie.getValue();
+              }
+          }
+      }
 
-    if (!checkToken(uid, token)) {
-      return null;
-    }
-    
-    UserLoginDTO userLoginDTO = new UserLoginDTO();
-    
-    userLoginDTO.setUid(uid);
-    return userLoginDTO;
+      if (sUid == null || token == null) {
+          return false;
+      }
+
+      long uid;
+      try {
+          uid = Long.parseLong(sUid);
+      } catch (NumberFormatException e) {
+          return false;
+      }
+
+      if (!checkToken(uid, token)) {
+          return false;
+      }
+
+      return true;
   }
-  
+
 }

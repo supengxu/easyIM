@@ -1,6 +1,7 @@
 package top.xxpblog.easyChat.api.controller.user;
 
 import io.swagger.annotations.ApiOperation;
+import top.xxpblog.easyChat.api.annotation.RequiredPermission;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.service.user.UserProfileService;
 import top.xxpblog.easyChat.api.service.user.UserService;
@@ -34,14 +35,13 @@ public class UserIndexController {
     private UserProfileService userProfileService;
     
     @ApiOperation("查询登陆的用户信息")
+    @RequiredPermission
     @GetMapping("/loginInfo")
     public BaseResVO loginInfo(HttpServletRequest request) {
-        
+
         // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
     
         Long uid = userLoginDTO.getUid();
     
@@ -66,15 +66,11 @@ public class UserIndexController {
     }
     
     @ApiOperation("查看他人的用户信息")
+    @RequiredPermission
     @GetMapping("/read")
-    public BaseResVO read(@RequestParam(value = "uid") Long uid,
-                          HttpServletRequest request) {
-        
-        // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+    public BaseResVO read(@RequestParam(value = "uid") Long uid) {
+
+
     
         User user = userService.findByUid(uid);
     
@@ -88,13 +84,11 @@ public class UserIndexController {
     
     
     @ApiOperation("获取用户的二维码--可用户添加好友")
+    @RequiredPermission
     @GetMapping("/getQRCheckCode")
     public BaseResVO getQRCheckCode(HttpServletRequest request) {
         // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
         
         Long uid = userLoginDTO.getUid();
         

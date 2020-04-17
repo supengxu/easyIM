@@ -1,6 +1,7 @@
 package top.xxpblog.easyChat.api.controller.group;
 
 import io.swagger.annotations.ApiOperation;
+import top.xxpblog.easyChat.api.annotation.RequiredPermission;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.constant.WSMsgTypeConstant;
 import top.xxpblog.easyChat.api.constant.WSResTypeConstant;
@@ -46,6 +47,7 @@ public class GroupUserController {
     private GroupMsgService groupMsgService;
     
     @ApiOperation("获取该用户的群列表")
+    @RequiredPermission
     @GetMapping("/lists")
     public BaseResVO lists(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                            @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
@@ -53,10 +55,8 @@ public class GroupUserController {
         
         limit = limit > 100 ? 100 : limit;
         // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
         
         Long uid = userLoginDTO.getUid();
         
@@ -83,16 +83,15 @@ public class GroupUserController {
     }
     
     @ApiOperation("添加群")
+    @RequiredPermission
     @PostMapping("/create")
     public BaseResVO create(@RequestParam(value = "checkCode", required = false, defaultValue = "") String checkCode,
                             @RequestParam(value = "groupId", required = false, defaultValue = "0L") Long groupId,
                             HttpServletRequest request) {
         
         // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
         
         Long uid = userLoginDTO.getUid();
         if (groupId == null || groupId <= 0) {
@@ -153,6 +152,7 @@ public class GroupUserController {
     }
     
     @ApiOperation("更新群")
+    @RequiredPermission
     @PostMapping("/update")
     public BaseResVO update(@Valid @RequestBody GroupUserSaveReqVO groupUserSaveReqVO,
                             BindingResult bindingResult,
@@ -161,11 +161,9 @@ public class GroupUserController {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
         
-        // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
         
         Long uid = userLoginDTO.getUid();
         
@@ -184,6 +182,7 @@ public class GroupUserController {
     }
     
     @ApiOperation("删除 （退出群）")
+    @RequiredPermission
     @PostMapping("/delete")
     public BaseResVO delete(@RequestParam(value = "groupId") Long groupId,
                             HttpServletRequest request) {
@@ -194,10 +193,7 @@ public class GroupUserController {
         }
         
         // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
         
         Long uid = userLoginDTO.getUid();
         
@@ -223,14 +219,12 @@ public class GroupUserController {
     }
     
     @ApiOperation("获取二维码")
+    @RequiredPermission
     @GetMapping("/getCheckCode")
     public BaseResVO getCheckCode(@RequestParam(value = "groupId") Long groupId,
                                   HttpServletRequest request) {
-        // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
         
         Long uid = userLoginDTO.getUid();
         
@@ -247,14 +241,12 @@ public class GroupUserController {
     
     
     @ApiOperation("清空未读消息数量")
+    @RequiredPermission
     @PostMapping("/clearUnMsgCount")
     public BaseResVO clearUnMsgCount(@RequestParam(value = "groupId") Long groupId,
                                      HttpServletRequest request) {
         // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
         
         Long uid = userLoginDTO.getUid();
         // 判断是否在群里面

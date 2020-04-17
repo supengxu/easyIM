@@ -1,6 +1,7 @@
 package top.xxpblog.easyChat.api.controller.user;
 
 import io.swagger.annotations.ApiOperation;
+import top.xxpblog.easyChat.api.annotation.RequiredPermission;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.constant.WSMsgTypeConstant;
 import top.xxpblog.easyChat.api.constant.WSResTypeConstant;
@@ -55,16 +56,15 @@ public class UserFriendAskController {
   private UserFriendMsgService userFriendMsgService;
 
   @ApiOperation("获取好友申请列表")
+  @RequiredPermission
   @GetMapping("/lists")
   public BaseResVO lists(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                          @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
                          HttpServletRequest request) {
     
-    // 验证登录
-    UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-    if (userLoginDTO == null) {
-      return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-    }
+
+    UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
     
     Long uid = userLoginDTO.getUid();
 
@@ -95,16 +95,15 @@ public class UserFriendAskController {
   }
   
   @ApiOperation("创建好友申请")
+  @RequiredPermission
   @PostMapping("/create")
   public BaseResVO create(@RequestParam(value = "checkCode", required = false, defaultValue = "") String checkCode,
                           @RequestParam(value = "friendUid", required = false, defaultValue = "0L") Long friendUid,
                           @RequestParam(value = "remark", required = false, defaultValue = "") String remark,
                           HttpServletRequest request) {
     // 验证登录
-    UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-    if (userLoginDTO == null) {
-      return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-    }
+    UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
     
     Long uid = userLoginDTO.getUid();
     if (friendUid == null || friendUid <= 0) {
@@ -170,6 +169,7 @@ public class UserFriendAskController {
   }
   
   @ApiOperation("确认好友请求")
+  @RequiredPermission
   @PostMapping("/ack")
   public BaseResVO ack(@Valid @RequestBody UserFriendAskAckReqVO userFriendAskAckReqVO,
                        BindingResult bindingResult,
@@ -177,12 +177,8 @@ public class UserFriendAskController {
     if (bindingResult.hasErrors()) {
       return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
     }
-    
-    // 验证登录
-    UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-    if (userLoginDTO == null) {
-      return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-    }
+
+    UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
     
     Long uid = userLoginDTO.getUid();
     Long id = userFriendAskAckReqVO.getId();
@@ -306,14 +302,13 @@ public class UserFriendAskController {
    * 清空请求数量
    * @return
    */
+  @RequiredPermission
   @PostMapping("/clearFriendAskCount")
   public BaseResVO clearFriendAskCount(HttpServletRequest request) {
   
     // 验证登录
-    UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-    if (userLoginDTO == null) {
-      return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-    }
+    UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
   
     Long uid = userLoginDTO.getUid();
   

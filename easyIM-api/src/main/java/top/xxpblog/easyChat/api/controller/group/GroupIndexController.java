@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import top.xxpblog.easyChat.api.annotation.RequiredPermission;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.service.group.GroupService;
 import top.xxpblog.easyChat.api.service.group.GroupUserService;
@@ -46,17 +47,15 @@ public class GroupIndexController {
     private UserService userService;
 
     @ApiOperation("查询群用户列表")
+    @RequiredPermission
     @GetMapping("/lists")
     public BaseResVO lists(@RequestParam("groupId") Long groupId,
                            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                            @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
                            HttpServletRequest request) {
-        // 验证登录
-        // TODO 需要把所有的登录验证放到握手的时候
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
 
         Long uid = userLoginDTO.getUid();
         // 判断是不是在群里边
@@ -82,6 +81,7 @@ public class GroupIndexController {
     }
 
     @ApiOperation("创建群聊")
+    @RequiredPermission
     @PostMapping("/create")
     public BaseResVO create(@Valid @RequestBody GroupSaveReqVO groupSaveReqVO,
                             BindingResult bindingResult,
@@ -90,11 +90,8 @@ public class GroupIndexController {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
 
-        // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
 
         Long uid = userLoginDTO.getUid();
 
@@ -128,6 +125,7 @@ public class GroupIndexController {
     }
 
     @ApiOperation("更新群信息")
+    @RequiredPermission
     @PostMapping("/update")
     public BaseResVO update(@Valid @RequestBody GroupSaveReqVO groupSaveReqVO,
                             BindingResult bindingResult,
@@ -142,10 +140,8 @@ public class GroupIndexController {
         }
 
         // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
 
         Long uid = userLoginDTO.getUid();
 
@@ -182,6 +178,7 @@ public class GroupIndexController {
     }
 
     @ApiOperation("删除群\\解散群")
+    @RequiredPermission
     @PostMapping("/delete")
     public BaseResVO delete(@RequestParam(value = "groupId") Long groupId,
                             HttpServletRequest request) {
@@ -191,11 +188,8 @@ public class GroupIndexController {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, "参数错误~");
         }
 
-        // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
 
         Long uid = userLoginDTO.getUid();
 

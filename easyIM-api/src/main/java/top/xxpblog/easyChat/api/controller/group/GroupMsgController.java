@@ -2,6 +2,7 @@ package top.xxpblog.easyChat.api.controller.group;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import top.xxpblog.easyChat.api.annotation.RequiredPermission;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.constant.WSResTypeConstant;
 import top.xxpblog.easyChat.api.service.group.GroupMsgService;
@@ -47,6 +48,7 @@ public class GroupMsgController {
     private WSServer wsServer;
 
     @ApiOperation("查询列表")
+    @RequiredPermission
     @GetMapping("/lists")
     public BaseResVO lists(@RequestParam("groupId") Long groupId,
                            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
@@ -55,10 +57,8 @@ public class GroupMsgController {
 
         limit = limit > 25 ? 25 : limit;
         // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
 
         Long uid = userLoginDTO.getUid();
 
@@ -89,6 +89,7 @@ public class GroupMsgController {
     }
 
     @ApiOperation("发布群消息")
+    @RequiredPermission
     @PostMapping("/create")
     public BaseResVO create(@Valid @RequestBody GroupMsgCreateReqVO groupMsgCreateReqVO,
                             BindingResult bindingResult,
@@ -98,10 +99,8 @@ public class GroupMsgController {
         }
 
         // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
 
         Long uid = userLoginDTO.getUid();
 

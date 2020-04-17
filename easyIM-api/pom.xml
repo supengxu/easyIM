@@ -26,7 +26,11 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
-
+        <!--引入AOP-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
         <!--web-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -135,8 +139,8 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <!--<configuration>-->
-                    <!--<fork>true</fork>-->
-                    <!--<addResources>true</addResources>-->
+                <!--<fork>true</fork>-->
+                <!--<addResources>true</addResources>-->
                 <!--</configuration>-->
             </plugin>
         </plugins>

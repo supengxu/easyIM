@@ -1,6 +1,7 @@
 package top.xxpblog.easyChat.api.controller.user;
 
 import io.swagger.annotations.ApiOperation;
+import top.xxpblog.easyChat.api.annotation.RequiredPermission;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.constant.WSMsgTypeConstant;
 import top.xxpblog.easyChat.api.constant.WSResTypeConstant;
@@ -50,6 +51,7 @@ public class UserFriendMsgController {
     private WSServer wsServer;
     
     @ApiOperation("获取好友消息列表")
+    @RequiredPermission
     @GetMapping("/lists")
     public BaseResVO lists(@RequestParam(value = "senderUid") Long senderUid,
                            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
@@ -57,10 +59,7 @@ public class UserFriendMsgController {
                            HttpServletRequest request) {
         
         // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
         
         Long uid = userLoginDTO.getUid();
         
@@ -84,6 +83,7 @@ public class UserFriendMsgController {
     }
     
     @ApiOperation("好友间发送消息")
+    @RequiredPermission
     @PostMapping("/create")
     public BaseResVO create(@Valid @RequestBody UserFriendMsgSaveReqVO userFriendMsgSaveReqVO,
                             BindingResult bindingResult,
@@ -92,11 +92,9 @@ public class UserFriendMsgController {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
         
-        // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
         
         Long uid = userLoginDTO.getUid();
         
@@ -185,6 +183,7 @@ public class UserFriendMsgController {
     
     
     @ApiOperation("清空未读的消息数量")
+    @RequiredPermission
     @PostMapping("/clearUnMsgCount")
     public BaseResVO clearUnMsgCount(@Valid @RequestBody UserFriendMsgClearMsgCountReqVO msgCountReqVO,
                                      BindingResult bindingResult,
@@ -193,11 +192,9 @@ public class UserFriendMsgController {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
         
-        // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
         
         Long uid = userLoginDTO.getUid();
         

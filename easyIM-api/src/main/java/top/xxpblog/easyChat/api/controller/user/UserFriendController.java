@@ -1,6 +1,7 @@
 package top.xxpblog.easyChat.api.controller.user;
 
 import io.swagger.annotations.ApiOperation;
+import top.xxpblog.easyChat.api.annotation.RequiredPermission;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.service.user.UserFriendService;
 import top.xxpblog.easyChat.api.service.user.UserService;
@@ -38,16 +39,13 @@ public class UserFriendController {
     private UserService userService;
 
     @ApiOperation("获取好友列表")
+    @RequiredPermission
     @GetMapping("/lists")
     public BaseResVO lists(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                            @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
                            HttpServletRequest request) {
 
-        // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
 
         limit = limit > 50 ? 50 : limit;
 
@@ -74,6 +72,7 @@ public class UserFriendController {
 
 
     @ApiOperation("删除好友关系")
+    @RequiredPermission
     @PostMapping("/delete")
     public BaseResVO delete(@Valid @RequestBody UserFriendDeleteReqVO userFriendDeleteReqVO,
                             BindingResult bindingResult,
@@ -83,10 +82,8 @@ public class UserFriendController {
         }
 
         // 验证登录
-        UserLoginDTO userLoginDTO = UserLoginUtils.check(request);
-        if (userLoginDTO == null) {
-            return ResultVOUtils.error(ResultEnum.LOGIN_VERIFY_FALL);
-        }
+        UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+
 
         Long uid = userLoginDTO.getUid();
         Long friendUid = userFriendDeleteReqVO.getFriendUid();

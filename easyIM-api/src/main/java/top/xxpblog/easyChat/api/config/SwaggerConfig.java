@@ -12,14 +12,14 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableSwagger2
+
 public class SwaggerConfig {
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("top.xxpblog"))
+                .apis(RequestHandlerSelectors.basePackage("top.xxpblog.easyChat.api"))
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -27,10 +27,10 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("基于Swagger构建的Rest API文档")
-                .description("更多请咨询服务开发者eknown")
-                .contact(new Contact("空夜", "http://www.eknown.cn", "eknown@163.com"))
-                .termsOfServiceUrl("http://www.eknown.com")
+                .title("easyIM系统API文档")
+                .description("关于本系统全部的API文档")
+                .contact(new Contact("徐小鹏", "http://www.xxpblog.top", "xspdebug@gmail.com"))
+                .termsOfServiceUrl("http://http://www.xxpblog.top")
                 .version("1.0")
                 .build();
     }
