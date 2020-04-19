@@ -78,56 +78,5 @@ public class OkHttpUtil {
         return execNewCall(request);
     }
 
-    /**
-     * post
-     *
-     * @param url    请求的url
-     * @param params post form 提交的参数
-     * @return 请求成功
-     */
-    public static String post(String url, Map<String, String> params) {
-        FormBody.Builder builder = new FormBody.Builder();
-        //添加参数
-        if (params != null && params.keySet().size() > 0) {
-            for (String key : params.keySet()) {
-                builder.add(key, params.get(key));
-            }
-        }
-        Request request = new Request.Builder()
-                .url(url)
-                .post(builder.build())
-                .build();
-        return execNewCall(request);
-    }
 
-
-    /**
-     * Post请求发送JSON数据....{"name":"zhangsan","pwd":"123456"}
-     * 参数一：请求Url
-     * 参数二：请求的JSON
-     * 参数三：请求回调
-     */
-    public static String postJson(String url, String jsonParams) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonParams);
-        Request request = new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build();
-        return execNewCall(request);
-    }
-
-    /**
-     * Post请求发送xml数据....
-     * 参数一：请求Url
-     * 参数二：请求的xmlString
-     * 参数三：请求回调
-     */
-    public static String postXml(String url, String xml) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/xml; charset=utf-8"), xml);
-        Request request = new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build();
-        return execNewCall(request);
-    }
 }

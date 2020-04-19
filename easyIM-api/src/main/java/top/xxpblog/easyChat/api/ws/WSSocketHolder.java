@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WSSocketHolder {
 
+    // 存储所有在线的用户
     private static final Map<Long, Channel> CHANNEL_MAP = new ConcurrentHashMap<>(16);
 
     public static void put(Long id, Channel channel) {

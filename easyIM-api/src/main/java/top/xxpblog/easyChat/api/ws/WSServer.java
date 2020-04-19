@@ -26,8 +26,8 @@ public class WSServer {
     @Value("${ws.port}")
     private int wsPort;
 
-    private EventLoopGroup boss = new NioEventLoopGroup();
-    private EventLoopGroup work = new NioEventLoopGroup();
+    private final EventLoopGroup boss = new NioEventLoopGroup();
+    private final EventLoopGroup work = new NioEventLoopGroup();
 
     /**
      * 启动 ws server
@@ -73,6 +73,7 @@ public class WSServer {
 
         if (null == channel) {
             log.info("用户ID[" + fromUid + "]不在线！");
+            //TODO 消息离线存储
             return false;
         }
         WSMessageReqVO wsMessageReqVO = wsBaseReqVO.getMessage();

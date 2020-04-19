@@ -102,14 +102,14 @@ public class UserFriendMsgController {
         
         // 判断是不是朋友
         UserFriend userFriend = userFriendService.findByUidAndFriendUid(uid, receiverUid);
-        if (userFriend == null) {
+        if (userFriend == null) { //TODO 用null来判断有点不合适，是否能换一种方式
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, "该用户还不是你的好友~");
         }
     
         Long senderUid = uid;
         // 追加消息
         UserFriendMsg userFriendMsg = new UserFriendMsg();
-        // 把最小的那个 用户ID作为 之后的查询uid
+        // 把最小的那个 用户ID作为 之后的查询uid //TODO 不是很理解
         Long toUid = receiverUid;
         if (uid > receiverUid) {
             toUid = uid;
@@ -130,10 +130,10 @@ public class UserFriendMsgController {
             case WSMsgTypeConstant.FILE:
                 lastMsgContent = "[文件消息]";
                 break;
-            case WSMsgTypeConstant.VOICE:
+            case WSMsgTypeConstant.VOICE:  //TODO 现在还没有实现
                 lastMsgContent = "[语言消息]";
                 break;
-            case WSMsgTypeConstant.VIDEO:
+            case WSMsgTypeConstant.VIDEO: //TODO 现在还没有实现
                 lastMsgContent = "[视频消息]";
                 break;
             default:
@@ -141,8 +141,8 @@ public class UserFriendMsgController {
         }
         userFriendMsg.setMsgType(msgType);
         userFriendMsg.setMsgContent(msgContent);
-        boolean b = userFriendMsgService.insertUserFriendMsg(userFriendMsg);
-        if (!b) {
+        boolean result = userFriendMsgService.insertUserFriendMsg(userFriendMsg);
+        if (!result) {
             return ResultVOUtils.error();
         }
         
