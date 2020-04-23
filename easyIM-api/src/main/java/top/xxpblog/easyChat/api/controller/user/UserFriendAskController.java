@@ -271,13 +271,9 @@ public class UserFriendAskController {
     // 追加消息
     UserFriendMsg userFriendMsg = new UserFriendMsg();
     // 把最小的那个 用户ID作为 之后的查询uid
-    Long toUid = friendUid;
-    if (uid > friendUid) {
-      toUid = uid;
-      uid = friendUid;
-    }
+
     userFriendMsg.setUid(uid);
-    userFriendMsg.setToUid(toUid);
+    userFriendMsg.setToUid(friendUid);
     userFriendMsg.setSenderUid(senderUid);
     userFriendMsg.setMsgContent(msgContent);
     userFriendMsg.setMsgType(1);

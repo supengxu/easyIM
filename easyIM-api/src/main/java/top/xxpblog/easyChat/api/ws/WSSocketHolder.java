@@ -28,5 +28,8 @@ public class WSSocketHolder {
     public static void remove(Channel channel) {
         CHANNEL_MAP.entrySet().stream().filter(entry -> entry.getValue() == channel).forEach(entry -> CHANNEL_MAP.remove(entry.getKey()));
     }
+    public static Integer Count(){
+        return CHANNEL_MAP.entrySet().size();
+    }
 
 }

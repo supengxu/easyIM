@@ -82,7 +82,7 @@ public class GroupUserController {
         return ResultVOUtils.success(groupUserListResVOS);
     }
     
-    @ApiOperation("添加群")
+    @ApiOperation("通过二维码邀请入群")
     @RequiredPermission
     @PostMapping("/create")
     public BaseResVO create(@RequestParam(value = "checkCode", required = false, defaultValue = "") String checkCode,

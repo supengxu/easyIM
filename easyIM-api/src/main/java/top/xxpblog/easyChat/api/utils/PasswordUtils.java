@@ -7,6 +7,7 @@ import org.springframework.util.DigestUtils;
  */
 public class PasswordUtils {
 
+
     public static String md52md5(String pwd) {
         return DigestUtils.md5DigestAsHex(DigestUtils.md5DigestAsHex(pwd.getBytes()).getBytes());
     }

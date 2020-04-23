@@ -105,19 +105,12 @@ public class UserFriendMsgController {
         if (userFriend == null) { //TODO 用null来判断有点不合适，是否能换一种方式
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, "该用户还不是你的好友~");
         }
-    
-        Long senderUid = uid;
+
         // 追加消息
         UserFriendMsg userFriendMsg = new UserFriendMsg();
-        // 把最小的那个 用户ID作为 之后的查询uid //TODO 不是很理解
-        Long toUid = receiverUid;
-        if (uid > receiverUid) {
-            toUid = uid;
-            uid = receiverUid;
-        }
         userFriendMsg.setUid(uid);
-        userFriendMsg.setToUid(toUid);
-        userFriendMsg.setSenderUid(senderUid);
+        userFriendMsg.setToUid(receiverUid);
+        userFriendMsg.setSenderUid(uid);
         Integer msgType = userFriendMsgSaveReqVO.getMsgType();
         String msgContent = userFriendMsgSaveReqVO.getMsgContent();
         String lastMsgContent = msgContent;
@@ -150,7 +143,7 @@ public class UserFriendMsgController {
         // 给接收者更新最后一次的消息
         UserFriend userFriend1 = new UserFriend();
         userFriend1.setUid(receiverUid);
-        userFriend1.setFriendUid(senderUid);
+        userFriend1.setFriendUid(uid);
         userFriend1.setUnMsgCount(1);
         userFriend1.setLastMsgContent(lastMsgContent);
         userFriend1.setCreateTime(new Date());
@@ -158,7 +151,7 @@ public class UserFriendMsgController {
         userFriends.add(userFriend1);
         // 给当前用户更新最后一次的消息
         UserFriend userFriend2 = new UserFriend();
-        userFriend2.setUid(senderUid);
+        userFriend2.setUid(uid);
         userFriend2.setFriendUid(receiverUid);
         userFriend2.setUnMsgCount(0);
         userFriend2.setLastMsgContent(lastMsgContent);
@@ -170,7 +163,7 @@ public class UserFriendMsgController {
 
         // 发送在线消息
         // 查询用户信息
-        User user = userService.findByUid(senderUid);
+        User user = userService.findByUid(uid);
         Long sUid = user.getUid();
         String name = user.getName();
         String avatar = user.getAvatar();

@@ -1,14 +1,11 @@
 package top.xxpblog.easyChat.api.ws;
 
+import io.netty.channel.*;
 import top.xxpblog.easyChat.api.constant.WSResTypeConstant;
 import top.xxpblog.easyChat.api.constant.WSReqTypeConstant;
 import top.xxpblog.easyChat.api.utils.UserLoginUtils;
 import top.xxpblog.easyChat.common.protobuf.WSBaseReqProtoOuterClass;
 import top.xxpblog.easyChat.common.protobuf.WSBaseResProtoOuterClass;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +48,8 @@ public class WSServerHandler extends SimpleChannelInboundHandler<WSBaseReqProtoO
         super.userEventTriggered(ctx, evt);
     }
 
+
+
     /**
      * 用户下线
      */
@@ -58,6 +57,8 @@ public class WSServerHandler extends SimpleChannelInboundHandler<WSBaseReqProtoO
         WSSocketHolder.remove(ctx.channel());
         ctx.channel().close();
     }
+
+
 
     /**
      * 读到客户端的内容 （这里只做心跳检查）
@@ -77,7 +78,7 @@ public class WSServerHandler extends SimpleChannelInboundHandler<WSBaseReqProtoO
                 userLogin(ctx, uid, sid);
                 break;
             case WSReqTypeConstant.PING: // 心跳
-                log.info("客户端心跳");
+                log.info("客户端心跳"+ WSSocketHolder.Count());
                 break;
             default:
                 log.info("未知类型");

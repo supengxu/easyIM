@@ -4,6 +4,7 @@ package top.xxpblog.easyChat.api.controller.user;
 import io.swagger.annotations.ApiOperation;
 import top.xxpblog.easyChat.api.utils.UserLoginUtils;
 import top.xxpblog.easyChat.api.vo.req.UserLoginPwdReqVO;
+import top.xxpblog.easyChat.api.vo.req.UserRegisterReqVO;
 import top.xxpblog.easyChat.api.vo.res.UserLoginResVO;
 import top.xxpblog.easyChat.api.service.user.UserService;
 import top.xxpblog.easyChat.api.utils.PasswordUtils;
@@ -69,7 +70,19 @@ public class UserLoginController {
         userLoginResVO.setSid(token);
         return ResultVOUtils.success(userLoginResVO);
     }
-
-
+    @ApiOperation("注册账号")
+    public BaseResVO RegisterUserByPasswordAndUserName(@Valid @RequestBody UserRegisterReqVO userRegister,
+                                                       BindingResult bindingResult){
+        // 检测账号密码
+        if (bindingResult.hasErrors()) {
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
+        }
+        User user = new User();
+        user.setName(userRegister.getUserName());
+        user.setPwd(PasswordUtils.md52md5(userRegister.getPwd()));
+        user.setRemark("用户很懒，啥都没有写");
+        user.setAvatar("");
+        return ResultVOUtils.success(ResultVOUtils.success());
+    }
 
 }

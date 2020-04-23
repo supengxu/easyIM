@@ -53,9 +53,7 @@ public class PermissionAspect {
         Method proxyMethod = ((MethodSignature) jp.getSignature()).getMethod();
         try {
             return jp.getTarget().getClass().getMethod(proxyMethod.getName(), proxyMethod.getParameterTypes());
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
+        } catch (NoSuchMethodException | SecurityException e) {
             e.printStackTrace();
         }
         return null;

@@ -2,6 +2,7 @@ package top.xxpblog.easyChat.api.ws;
 
 import com.google.protobuf.MessageLite;
 import com.google.protobuf.MessageLiteOrBuilder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import top.xxpblog.easyChat.common.protobuf.WSBaseReqProtoOuterClass;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -46,31 +47,33 @@ public class WSServerInitializer extends ChannelInitializer<SocketChannel> {
         // 协议包解码
         pipeline.addLast(new MessageToMessageDecoder<WebSocketFrame>() {
             @Override
-            protected void decode(ChannelHandlerContext ctx, WebSocketFrame frame, List<Object> objs) throws Exception {
-                ByteBuf buf = ((BinaryWebSocketFrame) frame).content();
+            protected void decode(ChannelHandlerContext ctx, WebSocketFrame frame, List<Object> objs) {
+                ByteBuf buf = ( frame).content();
                 objs.add(buf);
                 buf.retain();
             }
         });
         // 协议包编码
-        pipeline.addLast(new MessageToMessageEncoder<MessageLiteOrBuilder>() {
-            @Override
-            protected void encode(ChannelHandlerContext ctx, MessageLiteOrBuilder msg, List<Object> out) throws Exception {
-                ByteBuf result = null;
-                if (msg instanceof MessageLite) {
-                    result = wrappedBuffer(((MessageLite) msg).toByteArray());
-                }
-                if (msg instanceof MessageLite.Builder) {
-                    result = wrappedBuffer(((MessageLite.Builder) msg).build().toByteArray());
-                }
-
-                // ==== 上面代码片段是拷贝自TCP ProtobufEncoder 源码 ====
-                // 然后下面再转成websocket二进制流，因为客户端不能直接解析protobuf编码生成的
-
-                WebSocketFrame frame = new BinaryWebSocketFrame(result);
-                out.add(frame);
-            }
-        });
+        pipeline.addLast(new ProtobufEncoder());
+//        pipeline.addLast(new MessageToMessageEncoder<MessageLiteOrBuilder>() {
+//            @Override
+//            protected void encode(ChannelHandlerContext ctx, MessageLiteOrBuilder msg, List<Object> out) throws Exception {
+//                // ==== 上面代码片段是拷贝自TCP ProtobufEncoder 源码 ====
+//                ByteBuf result = null;
+//                if (msg instanceof MessageLite) {
+//                    result = wrappedBuffer(((MessageLite) msg).toByteArray());
+//                }
+//                if (msg instanceof MessageLite.Builder) {
+//                    result = wrappedBuffer(((MessageLite.Builder) msg).build().toByteArray());
+//                }
+//
+//
+//                // 然后下面再转成websocket二进制流，因为客户端不能直接解析protobuf编码生成的数据
+//
+//                WebSocketFrame frame = new BinaryWebSocketFrame(result);
+//                out.add(frame);
+//            }
+//        });
 
         // 协议包解码时指定Protobuf字节数实例化为CommonProtocol类型
         pipeline.addLast(new ProtobufDecoder(WSBaseReqProtoOuterClass.WSBaseReqProto.getDefaultInstance()));
