@@ -97,6 +97,10 @@ public class UserIndexController {
         return ResultVOUtils.success(checkCode);
         
     }
+
+    public BaseResVO getUserState(){
+        return null;
+    }
     
     
 }

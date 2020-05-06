@@ -30,7 +30,7 @@ public class UserLoginController {
 
 
     @ApiOperation("账号密码登陆")
-    @PostMapping("/byPwd")
+    @PostMapping("/loginByPassword")
     public BaseResVO byPwd(@Valid @RequestBody UserLoginPwdReqVO userLoginPwdReqVO,
                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -38,6 +38,7 @@ public class UserLoginController {
         }
 
         Long uid = userLoginPwdReqVO.getUid();
+        String userName = userLoginPwdReqVO.getPwd();
         User user = userService.findPwdByUid(uid);
         String md5Pwd = PasswordUtils.md52md5(userLoginPwdReqVO.getPwd());
         if (user == null || !md5Pwd.equals(user.getPwd())) {
@@ -53,7 +54,6 @@ public class UserLoginController {
 
     @ApiOperation("游客登陆")
     @PostMapping("/byTourist")
-    @CrossOrigin
     public BaseResVO byTourist(@RequestParam(value = "uid") Long uid) {
         //TODO 检验ID 是否存在该用户
         //TODO 游客登陆存在漏洞---不使用账号密码即可登陆，这样是绝对不可以的。
@@ -71,6 +71,7 @@ public class UserLoginController {
         return ResultVOUtils.success(userLoginResVO);
     }
     @ApiOperation("注册账号")
+    @PostMapping("/register")
     public BaseResVO RegisterUserByPasswordAndUserName(@Valid @RequestBody UserRegisterReqVO userRegister,
                                                        BindingResult bindingResult){
         // 检测账号密码
@@ -82,7 +83,14 @@ public class UserLoginController {
         user.setPwd(PasswordUtils.md52md5(userRegister.getPwd()));
         user.setRemark("用户很懒，啥都没有写");
         user.setAvatar("");
-        return ResultVOUtils.success(ResultVOUtils.success());
+         userService.insertUserAndReturnId(user);
+        long uid = user.getUid();
+        String token = UserLoginUtils.createSid(uid);
+
+        UserLoginResVO userLoginResVO = new UserLoginResVO();
+        userLoginResVO.setUid(uid);
+        userLoginResVO.setSid(token);
+        return ResultVOUtils.success(userLoginResVO);
     }
 
 }

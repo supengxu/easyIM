@@ -54,26 +54,25 @@ public class WSServerInitializer extends ChannelInitializer<SocketChannel> {
             }
         });
         // 协议包编码
-        pipeline.addLast(new ProtobufEncoder());
-//        pipeline.addLast(new MessageToMessageEncoder<MessageLiteOrBuilder>() {
-//            @Override
-//            protected void encode(ChannelHandlerContext ctx, MessageLiteOrBuilder msg, List<Object> out) throws Exception {
-//                // ==== 上面代码片段是拷贝自TCP ProtobufEncoder 源码 ====
-//                ByteBuf result = null;
-//                if (msg instanceof MessageLite) {
-//                    result = wrappedBuffer(((MessageLite) msg).toByteArray());
-//                }
-//                if (msg instanceof MessageLite.Builder) {
-//                    result = wrappedBuffer(((MessageLite.Builder) msg).build().toByteArray());
-//                }
-//
-//
-//                // 然后下面再转成websocket二进制流，因为客户端不能直接解析protobuf编码生成的数据
-//
-//                WebSocketFrame frame = new BinaryWebSocketFrame(result);
-//                out.add(frame);
-//            }
-//        });
+        pipeline.addLast(new MessageToMessageEncoder<MessageLiteOrBuilder>() {
+            @Override
+            protected void encode(ChannelHandlerContext ctx, MessageLiteOrBuilder msg, List<Object> out) throws Exception {
+                // ==== 上面代码片段是拷贝自TCP ProtobufEncoder 源码 ====
+                ByteBuf result = null;
+                if (msg instanceof MessageLite) {
+                    result = wrappedBuffer(((MessageLite) msg).toByteArray());
+                }
+                if (msg instanceof MessageLite.Builder) {
+                    result = wrappedBuffer(((MessageLite.Builder) msg).build().toByteArray());
+                }
+
+
+                // 然后下面再转成websocket二进制流，因为客户端不能直接解析protobuf编码生成的数据
+
+                WebSocketFrame frame = new BinaryWebSocketFrame(result);
+                out.add(frame);
+            }
+        });
 
         // 协议包解码时指定Protobuf字节数实例化为CommonProtocol类型
         pipeline.addLast(new ProtobufDecoder(WSBaseReqProtoOuterClass.WSBaseReqProto.getDefaultInstance()));

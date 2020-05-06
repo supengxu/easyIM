@@ -68,15 +68,9 @@ public class UserFriendMsgController {
         }
         
         Integer offset = PageUtils.createOffset(page, limit);
-        
-        // 把最小的那个 用户ID作为查询条件
-        Long toUid = senderUid;
-        if (uid > senderUid) {
-            toUid = uid;
-            uid = senderUid;
-        }
-        
-        List<UserFriendMsg> userFriendMsgs = userFriendMsgService.listByUidAndToUid(uid, toUid, offset, limit);
+
+
+        List<UserFriendMsg> userFriendMsgs = userFriendMsgService.listByUidAndToUid(uid, senderUid, offset, limit);
         
         return ResultVOUtils.success(userFriendMsgs);
         

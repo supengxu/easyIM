@@ -34,7 +34,7 @@ public interface UserDao {
      * @param user
      * @return
      */
-    boolean insertUser(User user);
+    Long insertUserAndReturnId(User user);
 
     /**
      * 更新

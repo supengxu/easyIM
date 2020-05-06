@@ -1,6 +1,7 @@
 package top.xxpblog.easyChat.api.controller.user;
 
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import top.xxpblog.easyChat.api.annotation.RequiredPermission;
 import top.xxpblog.easyChat.api.dto.UserLoginDTO;
 import top.xxpblog.easyChat.api.constant.WSMsgTypeConstant;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
  * 好友请求
  */
 @RequestMapping("/user/friendAsk")
+@Slf4j
 @RestController
 public class UserFriendAskController {
   
@@ -96,14 +98,14 @@ public class UserFriendAskController {
   
   @ApiOperation("创建好友申请")
   @RequiredPermission
-  @PostMapping("/create")
+  @GetMapping("/create")
   public BaseResVO create(@RequestParam(value = "checkCode", required = false, defaultValue = "") String checkCode,
-                          @RequestParam(value = "friendUid", required = false, defaultValue = "0L") Long friendUid,
+                          @RequestParam(value = "friendUid", required = false, defaultValue = "0") Long friendUid,
                           @RequestParam(value = "remark", required = false, defaultValue = "") String remark,
                           HttpServletRequest request) {
-    // 验证登录
-    UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
 
+    UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
+    log.info("创建好友链接");
     
     Long uid = userLoginDTO.getUid();
     if (friendUid == null || friendUid <= 0) {
@@ -293,15 +295,13 @@ public class UserFriendAskController {
     return ResultVOUtils.success();
     
   }
-  
-  /**
-   * 清空请求数量
-   * @return
-   */
+
+
+  @ApiOperation("清空消息提醒的数量")
   @RequiredPermission
   @PostMapping("/clearFriendAskCount")
   public BaseResVO clearFriendAskCount(HttpServletRequest request) {
-  
+
     // 验证登录
     UserLoginDTO userLoginDTO = UserLoginUtils.getUserLoginDTO(request);
 

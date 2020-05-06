@@ -14,7 +14,7 @@ public interface UserService {
     
     Map<Long, UserInfoListResVO> listByUidIn(List<Long> uids);
 
-    boolean insertUser(User user);
+    long insertUserAndReturnId(User user);
 
     boolean updateUser(User user);
 

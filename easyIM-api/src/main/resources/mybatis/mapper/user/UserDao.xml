@@ -26,14 +26,18 @@
         </foreach>
     </select>
 
-    <insert id="insertUser" keyProperty="uid" parameterType="top.xxpblog.easyChat.common.entity.user.User">
-        INSERT INTO user(`name`,avatar,remark,create_time,modified_time)
+    <insert id="insertUserAndReturnId"  useGeneratedKeys="true" keyProperty="uid" parameterType="top.xxpblog.easyChat.common.entity.user.User">
+        INSERT INTO user(`name`,pwd,avatar,remark,create_time,modified_time)
         VALUES
         (#{name},
+        #{pwd},
         #{avatar},
         #{remark},
         #{createTime},
         #{modifiedTime})
+        <selectKey resultType="long" keyProperty="uid" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
 
     <update id="updateUser" parameterType="top.xxpblog.easyChat.common.entity.user.User">

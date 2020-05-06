@@ -15,8 +15,10 @@ import javax.validation.constraints.NotNull;
 public class UserLoginPwdReqVO extends BaseReqVO {
     
     @NotNull(message = "用户ID不能为空")
+
     private Long uid;
-    
+
+
     /**
      * 密码
      */
