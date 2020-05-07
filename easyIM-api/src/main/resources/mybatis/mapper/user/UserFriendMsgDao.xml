@@ -6,8 +6,10 @@
     <select id="listByUidAndToUid" resultType="top.xxpblog.easyChat.common.entity.user.UserFriendMsg">
         select msg_id,sender_uid,msg_type,msg_content,create_time
         from `user_friend_msg`
-        where uid = #{uid}
-        and to_uid = #{toUid}
+        where (uid = #{uid}
+        and to_uid = #{toUid})
+        or (uid = #{toUid}
+        and to_uid = #{uid})
         order by msg_id desc
         limit #{offset},#{limit}
     </select>
